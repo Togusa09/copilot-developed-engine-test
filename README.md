@@ -11,7 +11,7 @@ Minimal C++ scaffold for a 3D game engine project.
 
 - CMake 3.26+
 - A C++20 compiler
-  - Visual Studio 2022 (MSVC) on Windows
+  - Visual Studio 2026 (MSVC) on Windows
   - Clang or GCC on Linux/macOS
 
 ### Windows setup (winget)
@@ -20,7 +20,6 @@ Install the required tools on Windows with:
 
 ```powershell
 winget install --id Kitware.CMake -e
-winget install --id Microsoft.VisualStudio.2022.BuildTools -e --override "--wait --quiet --add Microsoft.VisualStudio.Workload.VCTools"
 winget install --id Ninja-build.Ninja -e
 ```
 
@@ -40,22 +39,26 @@ ninja --version
 where.exe cl
 ```
 
-If `cl` is not found, open the **x64 Native Tools Command Prompt for VS 2022** and run the same checks there.
+If `cl` is not found, open the **x64 Native Tools Command Prompt for VS 2026** and run the same checks there.
 
 ## Build (Windows, Visual Studio)
 
 ```powershell
-cmake -S . -B build
-cmake --build build --config Debug
-.\build\src\Sandbox\Debug\Sandbox.exe
+cmake -S . -B build-vs -G "Visual Studio 18 2026" -A x64
+cmake --build build-vs --config Debug
+.\build-vs\src\Sandbox\Debug\Sandbox.exe
 ```
+
+Run these commands from **Developer PowerShell for VS 2026** (or after the MSVC toolchain is available in your PATH).
 
 ## Build (Ninja)
 
+On Windows with MSVC, run this from **Developer PowerShell for VS 2026** so the compiler environment is initialized.
+
 ```powershell
-cmake -S . -B build -G Ninja
-cmake --build build
-.\build\src\Sandbox\Sandbox.exe
+cmake -S . -B build-ninja -G Ninja
+cmake --build build-ninja
+.\build-ninja\src\Sandbox\Sandbox.exe
 ```
 
 ## Next Steps
