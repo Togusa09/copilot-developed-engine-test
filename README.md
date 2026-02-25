@@ -1,11 +1,19 @@
 # EngineTest
 
-Minimal C++ scaffold for a 3D game engine project.
+Minimal C++ scaffold for a 3D game engine project with FBX loading and selectable modern rendering backends.
 
 ## Project Layout
 
 - `src/Engine`: Static library for engine code
 - `src/Sandbox`: Executable used to test engine features
+
+## Current Features
+
+- FBX model loading via `Assimp`
+- Renderer backends for `DirectX 12` and `Vulkan` (through SDL3 renderer driver selection)
+- GUI controls via `Dear ImGui`
+- Native file picker integration via `nativefiledialog-extended`
+- Interactive model rotation and camera distance controls
 
 ## Requirements
 
@@ -13,6 +21,7 @@ Minimal C++ scaffold for a 3D game engine project.
 - A C++20 compiler
   - Visual Studio 2026 (MSVC) on Windows
   - Clang or GCC on Linux/macOS
+- Internet access during first configure/build (dependencies are pulled with CMake `FetchContent`)
 
 ### Windows setup (winget)
 
@@ -50,6 +59,18 @@ cmake --build build-vs --config Debug
 ```
 
 Run these commands from **Developer PowerShell for VS 2026** (or after the MSVC toolchain is available in your PATH).
+
+## Runtime Usage
+
+1. Start `Sandbox`.
+2. Click **Load FBX** in the **Model Viewer** window.
+3. Select an `.fbx` file.
+4. Rotate the model with:
+  - left-mouse drag in empty viewport area, or
+  - Yaw/Pitch/Roll sliders.
+5. Adjust camera distance with the slider.
+
+If DirectX 12 renderer creation fails on the machine, the app automatically falls back to Vulkan.
 
 ## Build (Ninja)
 
