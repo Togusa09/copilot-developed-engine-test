@@ -44,6 +44,7 @@
 - Every new module must be added as a target with explicit include dirs and link dependencies.
 - Keep warning levels high (`/W4` or `-Wall -Wextra -Wpedantic`) and fix warnings in touched code.
 - Do not introduce non-essential third-party dependencies without clear need.
+- Before invoking CMake Tools build/test actions, ensure an active configure preset is selected (prefer `vs2026-debug` in this repo).
 
 ## Testing and Validation
 
@@ -66,3 +67,4 @@
 - When adding files, follow existing folder and naming conventions.
 - Update `README.md` when setup/build behavior changes.
 - When assumptions are required, choose the simplest option and state it clearly.
+- Do not alter files under `tests/HumanDeveloperTests` unless the user explicitly requests changes in that path.

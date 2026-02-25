@@ -15,12 +15,41 @@
         "CMAKE_BUILD_TYPE": "Debug",
         "ENGINE_BUILD_SANDBOX": "ON"
       }
+    },
+    {
+      "name": "vs2026-debug",
+      "displayName": "VS2026 Debug",
+      "generator": "Visual Studio 18 2026",
+      "binaryDir": "${sourceDir}/build-vs",
+      "architecture": {
+        "value": "x64"
+      },
+      "cacheVariables": {
+        "ENGINE_BUILD_SANDBOX": "ON",
+        "ENGINE_BUILD_TESTS": "ON",
+        "ENGINE_BUILD_HUMAN_DEVELOPER_TESTS": "ON"
+      }
     }
   ],
   "buildPresets": [
     {
       "name": "default",
       "configurePreset": "default"
+    },
+    {
+      "name": "vs2026-debug",
+      "configurePreset": "vs2026-debug",
+      "configuration": "Debug"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "vs2026-debug",
+      "configurePreset": "vs2026-debug",
+      "configuration": "Debug",
+      "output": {
+        "outputOnFailure": true
+      }
     }
   ]
 }

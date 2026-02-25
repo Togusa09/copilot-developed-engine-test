@@ -6,6 +6,7 @@ Minimal C++ scaffold for a 3D game engine project with FBX loading and selectabl
 
 - `src/Engine`: Static library for engine code
 - `src/Sandbox`: Executable used to test engine features
+- `tests`: Unit and integration test targets plus developer-owned test scaffold
 
 ## Current Features
 
@@ -81,6 +82,32 @@ cmake -S . -B build-ninja -G Ninja
 cmake --build build-ninja
 .\build-ninja\src\Sandbox\Sandbox.exe
 ```
+
+## Run Tests
+
+CTest targets are enabled by default when `ENGINE_BUILD_TESTS=ON`.
+
+Visual Studio generator:
+
+```powershell
+cmake -S . -B build-vs -G "Visual Studio 18 2026" -A x64
+cmake --build build-vs --config Debug
+ctest --test-dir build-vs -C Debug --output-on-failure
+```
+
+Ninja generator:
+
+```powershell
+cmake -S . -B build-ninja -G Ninja
+cmake --build build-ninja
+ctest --test-dir build-ninja --output-on-failure
+```
+
+Included test targets:
+
+- `EngineUnitTests`: unit checks for core data model behavior
+- `EngineIntegrationTests`: integration checks for FBX loading against repository assets
+- `HumanDeveloperTests`: scaffold project reserved for manually authored developer tests
 
 ## Next Steps
 
