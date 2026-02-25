@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
 #include <memory>
 #include <string>
@@ -27,6 +28,8 @@ private:
     void UpdateGui();
     void DrawShortcutOverlay();
     void OpenLoadFbxDialog();
+    void UpdateAnimationPlayback(float deltaSeconds);
+    void StepAnimationSelection(int direction);
 
     bool running_;
     std::uint64_t frameCounter_;
@@ -41,9 +44,16 @@ private:
     float pitchDegrees_;
     float rollDegrees_;
     float cameraDistance_;
+    std::size_t currentAnimationIndex_;
+    float animationTimeSeconds_;
+    float animationSpeed_;
+    bool animationPlaying_;
+    std::uint64_t lastFrameCounterTimestamp_;
 
     bool sdlInitialized_;
     bool nfdInitialized_;
     bool imguiInitialized_;
+    bool useNativeDx12ImGui_;
+    bool wireOverlayEnabled_;
 };
 }

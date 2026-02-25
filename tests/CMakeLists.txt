@@ -11,6 +11,19 @@ target_compile_features(EngineUnitTests PRIVATE cxx_std_20)
 
 add_test(NAME Engine.Unit.ModelData COMMAND EngineUnitTests)
 
+add_executable(EngineRendererBackendSelectionTests
+    unit/RendererBackendSelectionTests.cpp
+)
+
+target_link_libraries(EngineRendererBackendSelectionTests
+    PRIVATE
+        Engine
+)
+
+target_compile_features(EngineRendererBackendSelectionTests PRIVATE cxx_std_20)
+
+add_test(NAME Engine.Unit.RendererBackendSelection COMMAND EngineRendererBackendSelectionTests)
+
 add_executable(EngineIntegrationTests
     integration/FbxLoaderIntegrationTests.cpp
 )

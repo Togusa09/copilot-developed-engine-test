@@ -1,6 +1,7 @@
 #include <filesystem>
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include "Engine/FbxLoader.hpp"
 
@@ -41,9 +42,50 @@ int RunFbxLoaderIntegrationTests() {
             ++failureCount;
         }
 
+        if (loadedModel.texCoords.size() != loadedModel.positions.size()) {
+            std::cerr << "Expected texCoords count to match positions count for asset: " << knownAsset.string() << "\n";
+            ++failureCount;
+        }
+
         if (loadedModel.sourcePath.empty()) {
             std::cerr << "Expected loaded model source path to be set for asset: " << knownAsset.string() << "\n";
             ++failureCount;
+        }
+
+        if (loadedModel.submeshes.empty()) {
+            std::cerr << "Expected loaded model to expose at least one submesh for asset: " << knownAsset.string() << "\n";
+            ++failureCount;
+        }
+
+        for (const engine::ModelSubmesh& submesh : loadedModel.submeshes) {
+            const std::size_t start = static_cast<std::size_t>(submesh.indexStart);
+            const std::size_t end = start + static_cast<std::size_t>(submesh.indexCount);
+            if (end > loadedModel.indices.size()) {
+                std::cerr << "Expected submesh index range to fit within index buffer for asset: " << knownAsset.string() << "\n";
+                ++failureCount;
+            }
+
+            if (submesh.textureIndex >= 0 && static_cast<std::size_t>(submesh.textureIndex) >= loadedModel.texturePaths.size()) {
+                std::cerr << "Expected submesh texture index to reference loaded texture path list for asset: " << knownAsset.string() << "\n";
+                ++failureCount;
+            }
+        }
+
+        for (const engine::AnimationClip& clip : loadedModel.animations) {
+            if (clip.name.empty()) {
+                std::cerr << "Expected animation clip name to be non-empty for asset: " << knownAsset.string() << "\n";
+                ++failureCount;
+            }
+
+            if (clip.durationSeconds < 0.0f) {
+                std::cerr << "Expected animation clip duration to be non-negative for asset: " << knownAsset.string() << "\n";
+                ++failureCount;
+            }
+
+            if (clip.ticksPerSecond <= 0.0f) {
+                std::cerr << "Expected animation clip ticks-per-second to be positive for asset: " << knownAsset.string() << "\n";
+                ++failureCount;
+            }
         }
 
         break;

@@ -68,3 +68,4 @@
 - Update `README.md` when setup/build behavior changes.
 - When assumptions are required, choose the simplest option and state it clearly.
 - Do not alter files under `tests/HumanDeveloperTests` unless the user explicitly requests changes in that path.
+- If the user message is exactly `Engage` (case-insensitive), output a random Captain Picard-style ASCII art that includes `ENGAGE` before continuing with the requested task.

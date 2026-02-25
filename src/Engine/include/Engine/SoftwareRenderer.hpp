@@ -7,10 +7,10 @@
 namespace engine {
 class SdlRendererBase;
 
-class DirectX12Renderer final : public Renderer {
+class SoftwareRenderer final : public Renderer {
 public:
-    DirectX12Renderer();
-    ~DirectX12Renderer() override;
+    SoftwareRenderer();
+    ~SoftwareRenderer() override;
 
     bool Initialize(SDL_Window* window, std::string& outError) override;
     void Shutdown() noexcept override;

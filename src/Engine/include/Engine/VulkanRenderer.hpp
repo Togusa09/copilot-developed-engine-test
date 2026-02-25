@@ -16,7 +16,7 @@ public:
     void Shutdown() noexcept override;
     void BeginFrame() override;
     void EndFrame() override;
-    void RenderModelWireframe(const ModelData& model, float yawDegrees, float pitchDegrees, float rollDegrees, float cameraDistance) override;
+    void RenderModelWireframe(const ModelData& model, float yawDegrees, float pitchDegrees, float rollDegrees, float cameraDistance, bool wireOverlayEnabled) override;
 
     [[nodiscard]] SDL_Renderer* GetNativeRenderer() const noexcept override;
     [[nodiscard]] const char* GetName() const noexcept override;

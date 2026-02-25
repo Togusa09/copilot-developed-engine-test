@@ -24,8 +24,8 @@ void VulkanRenderer::EndFrame() {
     impl_->EndFrame();
 }
 
-void VulkanRenderer::RenderModelWireframe(const ModelData& model, float yawDegrees, float pitchDegrees, float rollDegrees, float cameraDistance) {
-    impl_->RenderModelWireframe(model, yawDegrees, pitchDegrees, rollDegrees, cameraDistance);
+void VulkanRenderer::RenderModelWireframe(const ModelData& model, float yawDegrees, float pitchDegrees, float rollDegrees, float cameraDistance, bool wireOverlayEnabled) {
+    impl_->RenderModelWireframe(model, yawDegrees, pitchDegrees, rollDegrees, cameraDistance, wireOverlayEnabled);
 }
 
 SDL_Renderer* VulkanRenderer::GetNativeRenderer() const noexcept {

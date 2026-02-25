@@ -78,7 +78,27 @@ Run these commands from **Developer PowerShell for VS 2026** (or after the MSVC 
   - Yaw/Pitch/Roll sliders.
 5. Adjust camera distance with the slider.
 
-If DirectX 12 renderer creation fails on the machine, the app automatically falls back to Vulkan.
+If DirectX 12 renderer creation fails on the machine, the app automatically falls back to Vulkan, then software rendering.
+
+For troubleshooting backend-specific rendering issues, set `ENGINE_RENDERER` before launch to force a backend:
+
+```powershell
+$env:ENGINE_RENDERER = "software"   # or "dx12", "vulkan"
+.\build-vs\src\Sandbox\Debug\Sandbox.exe
+```
+
+To opt into the experimental native DirectX 12 + `imgui_impl_dx12` path:
+
+```powershell
+$env:ENGINE_NATIVE_DX12 = "1"
+$env:ENGINE_RENDERER = "dx12"
+.\build-vs\src\Sandbox\Debug\Sandbox.exe
+```
+
+Current scope of the native DX12 path: frame clear + Dear ImGui UI rendering. Model wireframe rendering is still handled in the SDL renderer path.
+
+If renderer fallback recreates ImGui at runtime, treat the current frame draw data as invalid.
+Do not call the SDL renderer backend with draw data captured before context teardown; skip that frame and continue with a fresh `ImGui::NewFrame()` cycle.
 
 ## Build (Ninja)
 
@@ -121,3 +141,4 @@ Included test targets:
 1. Add a platform layer (window/input abstraction)
 2. Add renderer module (OpenGL/Vulkan/DirectX)
 3. Add ECS, asset pipeline, and scene system
+4. Evaluate a native DirectX 12 renderer path with `imgui_impl_dx12` (instead of SDL renderer backend) for deeper DX12 diagnostics and backend-specific stability validation.

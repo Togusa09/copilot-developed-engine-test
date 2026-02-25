@@ -24,8 +24,8 @@ void DirectX12Renderer::EndFrame() {
     impl_->EndFrame();
 }
 
-void DirectX12Renderer::RenderModelWireframe(const ModelData& model, float yawDegrees, float pitchDegrees, float rollDegrees, float cameraDistance) {
-    impl_->RenderModelWireframe(model, yawDegrees, pitchDegrees, rollDegrees, cameraDistance);
+void DirectX12Renderer::RenderModelWireframe(const ModelData& model, float yawDegrees, float pitchDegrees, float rollDegrees, float cameraDistance, bool wireOverlayEnabled) {
+    impl_->RenderModelWireframe(model, yawDegrees, pitchDegrees, rollDegrees, cameraDistance, wireOverlayEnabled);
 }
 
 SDL_Renderer* DirectX12Renderer::GetNativeRenderer() const noexcept {

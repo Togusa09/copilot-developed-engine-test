@@ -21,3 +21,8 @@ endif()
 if(BUILD_TESTING AND ENGINE_BUILD_TESTS)
     add_subdirectory(tests)
 endif()
+
+install(FILES
+    "${CMAKE_SOURCE_DIR}/NOTICE.md"
+    DESTINATION "."
+)

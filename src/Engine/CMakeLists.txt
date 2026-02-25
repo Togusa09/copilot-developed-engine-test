@@ -59,13 +59,17 @@ add_library(Engine STATIC
     src/Application.cpp
     src/DirectX12Renderer.cpp
     src/FbxLoader.cpp
+    src/NativeDx12Renderer.cpp
+    src/RendererBackendSelection.cpp
     src/SdlRendererBase.cpp
+    src/SoftwareRenderer.cpp
     src/VulkanRenderer.cpp
     ${imgui_SOURCE_DIR}/imgui.cpp
     ${imgui_SOURCE_DIR}/imgui_demo.cpp
     ${imgui_SOURCE_DIR}/imgui_draw.cpp
     ${imgui_SOURCE_DIR}/imgui_tables.cpp
     ${imgui_SOURCE_DIR}/imgui_widgets.cpp
+    ${imgui_SOURCE_DIR}/backends/imgui_impl_dx12.cpp
     ${imgui_SOURCE_DIR}/backends/imgui_impl_sdl3.cpp
     ${imgui_SOURCE_DIR}/backends/imgui_impl_sdlrenderer3.cpp
 )
@@ -91,6 +95,7 @@ target_compile_features(Engine PUBLIC cxx_std_20)
 
 if(MSVC)
     target_compile_options(Engine PRIVATE /W4 /permissive-)
+    target_link_libraries(Engine PRIVATE d3d12 dxgi d3dcompiler)
 else()
     target_compile_options(Engine PRIVATE -Wall -Wextra -Wpedantic)
 endif()

@@ -11,6 +11,26 @@ int RunModelDataIsValidTests() {
         std::cerr << "Expected empty model to be invalid.\n";
         ++failureCount;
     }
+    if (!emptyModel.texCoords.empty()) {
+        std::cerr << "Expected empty model texCoords to be empty.\n";
+        ++failureCount;
+    }
+    if (!emptyModel.primaryTexturePath.empty()) {
+        std::cerr << "Expected empty model texture path to be empty.\n";
+        ++failureCount;
+    }
+    if (!emptyModel.texturePaths.empty()) {
+        std::cerr << "Expected empty model texture path list to be empty.\n";
+        ++failureCount;
+    }
+    if (!emptyModel.submeshes.empty()) {
+        std::cerr << "Expected empty model submesh list to be empty.\n";
+        ++failureCount;
+    }
+    if (!emptyModel.animations.empty()) {
+        std::cerr << "Expected empty model animations to be empty.\n";
+        ++failureCount;
+    }
 
     engine::ModelData onlyPositions;
     onlyPositions.positions.emplace_back(0.0f, 0.0f, 0.0f);
@@ -32,11 +52,18 @@ int RunModelDataIsValidTests() {
     validModel.positions.emplace_back(0.0f, 0.0f, 0.0f);
     validModel.positions.emplace_back(1.0f, 0.0f, 0.0f);
     validModel.positions.emplace_back(0.0f, 1.0f, 0.0f);
+    validModel.texCoords.emplace_back(0.0f, 0.0f);
+    validModel.texCoords.emplace_back(1.0f, 0.0f);
+    validModel.texCoords.emplace_back(0.0f, 1.0f);
     validModel.indices.push_back(0);
     validModel.indices.push_back(1);
     validModel.indices.push_back(2);
     if (!validModel.IsValid()) {
         std::cerr << "Expected model with positions and indices to be valid.\n";
+        ++failureCount;
+    }
+    if (validModel.texCoords.size() != validModel.positions.size()) {
+        std::cerr << "Expected texCoords size to match positions size in valid model fixture.\n";
         ++failureCount;
     }
 

@@ -18,7 +18,7 @@ public:
     virtual void BeginFrame() = 0;
     virtual void EndFrame() = 0;
 
-    virtual void RenderModelWireframe(const ModelData& model, float yawDegrees, float pitchDegrees, float rollDegrees, float cameraDistance) = 0;
+    virtual void RenderModelWireframe(const ModelData& model, float yawDegrees, float pitchDegrees, float rollDegrees, float cameraDistance, bool wireOverlayEnabled) = 0;
 
     [[nodiscard]] virtual SDL_Renderer* GetNativeRenderer() const noexcept = 0;
     [[nodiscard]] virtual const char* GetName() const noexcept = 0;
