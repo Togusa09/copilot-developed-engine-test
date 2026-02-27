@@ -61,6 +61,7 @@ add_library(Engine STATIC
     src/FbxLoader.cpp
     src/NativeDx12Renderer.cpp
     src/RendererBackendSelection.cpp
+    src/ShaderLoader.cpp
     src/SdlRendererBase.cpp
     src/SoftwareRenderer.cpp
     src/VulkanRenderer.cpp

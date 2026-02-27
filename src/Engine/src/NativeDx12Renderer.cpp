@@ -1,4 +1,6 @@
 #include "Engine/NativeDx12Renderer.hpp"
+#include "Engine/ShaderLoader.hpp"
+#include "Engine/ShaderProfiles.hpp"
 
 #include <algorithm>
 #include <array>
@@ -213,6 +215,7 @@ std::string ToErrorMessage(const char* label, HRESULT result) {
             return std::string(buffer);
         }() + ")";
 }
+
 }
 
 class NativeDx12Renderer::Impl {
@@ -313,48 +316,31 @@ public:
     }
 
     bool CreateWirePipeline(std::string& outError) {
-        const char* vertexShaderSource = R"(
-            struct VSInput {
-                float4 position : POSITION;
-                float4 color : COLOR;
-            };
+        std::string vertexShaderSource;
+        std::string pixelShaderSource;
+        std::string vertexShaderPath;
+        std::string pixelShaderPath;
 
-            struct VSOutput {
-                float4 position : SV_POSITION;
-                float4 color : COLOR;
-            };
+        if (!ShaderLoader::LoadTextFile("dx12/Wireframe.vs.hlsl", vertexShaderSource, vertexShaderPath, outError)) {
+            return false;
+        }
 
-            VSOutput main(VSInput input) {
-                VSOutput output;
-                output.position = input.position;
-                output.color = input.color;
-                return output;
-            }
-        )";
-
-        const char* pixelShaderSource = R"(
-            struct PSInput {
-                float4 position : SV_POSITION;
-                float4 color : COLOR;
-            };
-
-            float4 main(PSInput input) : SV_TARGET {
-                return input.color;
-            }
-        )";
+        if (!ShaderLoader::LoadTextFile("dx12/Wireframe.ps.hlsl", pixelShaderSource, pixelShaderPath, outError)) {
+            return false;
+        }
 
         Microsoft::WRL::ComPtr<ID3DBlob> vertexShader;
         Microsoft::WRL::ComPtr<ID3DBlob> pixelShader;
         Microsoft::WRL::ComPtr<ID3DBlob> compileErrors;
 
         HRESULT result = D3DCompile(
-            vertexShaderSource,
-            std::strlen(vertexShaderSource),
-            "NativeDx12WireVS",
+            vertexShaderSource.data(),
+            vertexShaderSource.size(),
+            vertexShaderPath.c_str(),
             nullptr,
             nullptr,
             "main",
-            "vs_5_0",
+            ShaderProfiles::Hlsl::VertexSm50.data(),
             0,
             0,
             &vertexShader,
@@ -370,13 +356,13 @@ public:
 
         compileErrors.Reset();
         result = D3DCompile(
-            pixelShaderSource,
-            std::strlen(pixelShaderSource),
-            "NativeDx12WirePS",
+            pixelShaderSource.data(),
+            pixelShaderSource.size(),
+            pixelShaderPath.c_str(),
             nullptr,
             nullptr,
             "main",
-            "ps_5_0",
+            ShaderProfiles::Hlsl::PixelSm50.data(),
             0,
             0,
             &pixelShader,
@@ -497,71 +483,31 @@ public:
     }
 
     bool CreateTexturedPipeline(std::string& outError) {
-        const char* vertexShaderSource = R"(
-            struct VSInput {
-                float4 position : POSITION;
-                float2 uv : TEXCOORD0;
-                float alpha : COLOR0;
-                float cutoff : TEXCOORD1;
-            };
+        std::string vertexShaderSource;
+        std::string pixelShaderSource;
+        std::string vertexShaderPath;
+        std::string pixelShaderPath;
 
-            struct VSOutput {
-                float4 position : SV_POSITION;
-                float2 uv : TEXCOORD0;
-                float alpha : COLOR0;
-                float cutoff : TEXCOORD1;
-            };
+        if (!ShaderLoader::LoadTextFile("dx12/Textured.vs.hlsl", vertexShaderSource, vertexShaderPath, outError)) {
+            return false;
+        }
 
-            VSOutput main(VSInput input) {
-                VSOutput output;
-                output.position = input.position;
-                output.uv = input.uv;
-                output.alpha = input.alpha;
-                output.cutoff = input.cutoff;
-                return output;
-            }
-        )";
-
-        const char* pixelShaderSource = R"(
-            Texture2D modelTexture : register(t0);
-            Texture2D opacityTexture : register(t1);
-            SamplerState linearSampler : register(s0);
-
-            struct PSInput {
-                float4 position : SV_POSITION;
-                float2 uv : TEXCOORD0;
-                float alpha : COLOR0;
-                float cutoff : TEXCOORD1;
-            };
-
-            float4 main(PSInput input) : SV_TARGET {
-                float4 color = modelTexture.Sample(linearSampler, input.uv);
-                float opacitySample = opacityTexture.Sample(linearSampler, input.uv).r;
-                if (input.cutoff < 0.0f) {
-                    opacitySample = 1.0f - opacitySample;
-                }
-                const float opacityScale = saturate(abs(input.alpha));
-                const float finalAlpha = opacityScale * saturate(opacitySample);
-                if (input.alpha < 0.0f && finalAlpha < saturate(abs(input.cutoff))) {
-                    discard;
-                }
-                color.a *= finalAlpha;
-                return color;
-            }
-        )";
+        if (!ShaderLoader::LoadTextFile("dx12/Textured.ps.hlsl", pixelShaderSource, pixelShaderPath, outError)) {
+            return false;
+        }
 
         Microsoft::WRL::ComPtr<ID3DBlob> vertexShader;
         Microsoft::WRL::ComPtr<ID3DBlob> pixelShader;
         Microsoft::WRL::ComPtr<ID3DBlob> compileErrors;
 
         HRESULT result = D3DCompile(
-            vertexShaderSource,
-            std::strlen(vertexShaderSource),
-            "NativeDx12TexturedVS",
+            vertexShaderSource.data(),
+            vertexShaderSource.size(),
+            vertexShaderPath.c_str(),
             nullptr,
             nullptr,
             "main",
-            "vs_5_0",
+            ShaderProfiles::Hlsl::VertexSm50.data(),
             0,
             0,
             &vertexShader,
@@ -577,13 +523,13 @@ public:
 
         compileErrors.Reset();
         result = D3DCompile(
-            pixelShaderSource,
-            std::strlen(pixelShaderSource),
-            "NativeDx12TexturedPS",
+            pixelShaderSource.data(),
+            pixelShaderSource.size(),
+            pixelShaderPath.c_str(),
             nullptr,
             nullptr,
             "main",
-            "ps_5_0",
+            ShaderProfiles::Hlsl::PixelSm50.data(),
             0,
             0,
             &pixelShader,
